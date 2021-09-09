@@ -62,28 +62,18 @@ solution(input).then(result => {
 });
 
 async function solution(input) {
-    var result = [];
-    async function solve() {
+    return new Promise((resolve, reject) => {
+        var result = [];
         function callback(size) {
             for (let i = 0; i < size; i++) {
-                input.read(i, (file) => { 
-                    if (file instanceof Folder) {
-                        file.size(callback);
-                        return;
-                    }
-                    
-                    if (file !== 'file' || file !== null || file !== {}) {
-                        result.push(file);
-                        console.log(file);
-                    }
-                })
+                input.read(i, file => {
+                    console.log(file);
+                });
             }
+            
+            resolve(result);
         }
-        return new Promise(resolve => {
-            input.size(callback);
-            resolve(result)
-        })
-    }
-    
-    return await solve();
+
+        input.size(callback)
+    });
 }
