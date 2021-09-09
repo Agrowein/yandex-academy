@@ -62,10 +62,28 @@ solution(input).then(result => {
 });
 
 async function solution(input) {
-    // ... решение задачи
-    // пример вызова read
-    input.read(1, (file) => console.log(file));
-
-    // пример вызова size
-    input.size((size) => console.log(size));
+    var result = [];
+    async function solve() {
+        function callback(size) {
+            for (let i = 0; i < size; i++) {
+                input.read(i, (file) => { 
+                    if (file instanceof Folder) {
+                        file.size(callback);
+                        return;
+                    }
+                    
+                    if (file !== 'file' || file !== null || file !== {}) {
+                        result.push(file);
+                        console.log(file);
+                    }
+                })
+            }
+        }
+        return new Promise(resolve => {
+            input.size(callback);
+            resolve(result)
+        })
+    }
+    
+    return await solve();
 }
